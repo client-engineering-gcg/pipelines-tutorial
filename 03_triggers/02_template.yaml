@@ -34,7 +34,6 @@ spec:
       - name: shared-workspace
         volumeClaimTemplate:
           spec:
-            storageClassName: slow
             accessModes:
               - ReadWriteOnce
             resources:
