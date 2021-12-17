@@ -100,6 +100,7 @@ Run the following command to see the `pipeline` service account:
 
 ```bash
 $ oc get serviceaccount pipeline
+$ oc adm policy add-scc-to-user privileged system:serviceaccount:pipelines-tutorial:pipeline
 ```
 
 You will use the simple application during this tutorial, which has a [frontend](https://github.com/openshift-pipelines/vote-ui) and [backend](https://github.com/openshift-pipelines/vote-api)
@@ -153,6 +154,8 @@ Install the `apply-manifests` and `update-deployment` tasks from the repository 
 $ oc create -f https://raw.githubusercontent.com/client-engineering-gcg/pipelines-tutorial/master/01_pipeline/01_apply_manifest_task.yaml
 
 $ oc create -f https://raw.githubusercontent.com/client-engineering-gcg/pipelines-tutorial/master/01_pipeline/02_update_deployment_task.yaml
+
+$ oc create -f https://raw.githubusercontent.com/client-engineering-gcg/pipelines-tutorial/master/01_pipeline/04_pipeline.yaml
 ```
 
 You can take a look at the tasks you created using the [Tekton CLI](https://github.com/tektoncd/cli/releases):
@@ -334,9 +337,9 @@ Lets start a pipeline to build and deploy backend application using `tkn`:
 ```bash
 $ tkn pipeline start build-and-deploy \
     -w name=shared-workspace,volumeClaimTemplateFile=https://raw.githubusercontent.com/client-engineering-gcg/pipelines-tutorial/master/01_pipeline/03_persistent_volume_claim.yaml \
-    -p deployment-name=vote-api \
+    -p deployment-name=pipelines-vote-ui \
     -p git-url=https://github.com/client-engineering-gcg/pipelines-vote-ui.git \
-    -p IMAGE=image-registry.openshift-image-registry.svc:5000/pipelines-tutorial/vote-api \
+    -p IMAGE=image-registry.openshift-image-registry.svc:5000/pipelines-tutorial/pipelines-vote-ui \
 
 Pipelinerun started: build-and-deploy-run-z2rz8
 
@@ -349,9 +352,9 @@ Similarly, start a pipeline to build and deploy frontend application:
 ```bash
 $ tkn pipeline start build-and-deploy \
     -w name=shared-workspace,volumeClaimTemplateFile=https://raw.githubusercontent.com/client-engineering-gcg/pipelines-tutorial/master/01_pipeline/03_persistent_volume_claim.yaml \
-    -p deployment-name=vote-ui \
+    -p deployment-name=pipelines-vote-ui \
     -p git-url=https://github.com/client-engineering-gcg/pipelines-vote-ui.git \
-    -p IMAGE=image-registry.openshift-image-registry.svc:5000/pipelines-tutorial/vote-ui \
+    -p IMAGE=image-registry.openshift-image-registry.svc:5000/pipelines-tutorial/pipelines-vote-ui \
 
 Pipelinerun started: build-and-deploy-run-xy7rw
 
